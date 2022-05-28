@@ -30,9 +30,9 @@ export default function ProjectGalleryProjectCard({
   return (
     <div className="w-full flex flex-col bg-[#f8fbff] dark:bg-[#2D2D2D] rounded-xl overflow-hidden shadow-xl hover:shadow-xxl p-3">
       {/* ====== #TOP SECTION */}
-      <div className="w-full flex items-center justify-between relative pr-4 pt-[8px] pb-[20px]">
-        <div className="flex justify-between items-center w-full h-[52.2px]">
-          <div className="relative flex gap-4 items-center pl-4">
+      <div className="w-full flex items-center justify-between relative pl-4 pr-4 pt-[8px] pb-[20px]">
+        <div className="flex justify-between items-center w-full">
+          <div className="relative flex gap-4 items-center">
             {trimmed &&
               trimmed.map((bubble, index) => {
                 return (
@@ -60,35 +60,16 @@ export default function ProjectGalleryProjectCard({
           </div>
           <div className="flex gap-[10px]">
             {tools &&
-              tools.map((tool, index) => {
+              tools.map(tool => {
                 switch (tool) {
                   case "github":
                     return (
-                      <GithubIcon
-                        key={index}
-                        fill={darkMode ? "white" : "black"}
-                        width={21}
-                        height={21}
-                      />
+                      <GithubIcon fill={darkMode ? "white" : "black"} width={21} height={21} />
                     );
                   case "figma":
-                    return (
-                      <FigmaIcon
-                        key={index}
-                        fill={darkMode ? "white" : "black"}
-                        width={21}
-                        height={21}
-                      />
-                    );
+                    return <FigmaIcon fill={darkMode ? "white" : "black"} width={21} height={21} />;
                   case "adobexd":
-                    return (
-                      <AdobeIcon
-                        key={index}
-                        fill={darkMode ? "white" : "black"}
-                        width={21}
-                        height={21}
-                      />
-                    );
+                    return <AdobeIcon fill={darkMode ? "white" : "black"} width={21} height={21} />;
                   default:
                     break;
                 }
@@ -99,16 +80,15 @@ export default function ProjectGalleryProjectCard({
       </div>
 
       {/* ====== #IMAGE */}
-      <div className="w-full h-[178px]  flex items-center justify-center relative">
+      <div className="w-full h-[178px] flex items-center justify-center relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt="" className="object-cover" />
+        <img src={image} alt="" className="object-cover w-[100%] h-[100%]" />
       </div>
 
       {/* ====== #TEXT SECTION */}
-      <div className="w-full mt-[5px]">
-      <Link href={`/project-details?id=${uniqueId}`}>
+      <div className="w-full mt-4">
         <h4 className=" text-[20.3px] font-semibold">{name}</h4>
-      </Link>
+ 
         <p className="text-[13.5px] mt-[10px]">{description}</p>
       </div>
 

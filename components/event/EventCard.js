@@ -10,32 +10,37 @@ export default function EventCard(event) {
   const route = `/events/${uniqueId}`;
   return (
     <article className="border-b-2 grid grid-cols-3 items-center p-7">
-      <div className="col-span-1 relative">
+      <div className="md:col-span-1 col-span-3 relative h-full">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="rounded-md w-full" src={image} alt={`image for event ${name}`} />
+        <img
+          className="rounded-md w-full h-full"
+          style={{ height: "100%" }}
+          src={image}
+          alt={`image for event ${name}`}
+        />
         <Avatar
           className="absolute -top-5 -left-5 w-[90px] h-[90px]"
           image={creator.image}
           border="!border-[5px]"
         />
       </div>
-      <div className="col-span-2 px-7">
+      <div className="md:col-span-2 col-span-3 md:px-7">
         <section className="mb-2">
-          <h1 className="headline">{name}</h1>
-          <p className="caption text-black dark:text-white">
+          <h1 className="md:headline font-bold text-28px mb-3">{name}</h1>
+          <p className="md:caption font-semibold text-justify text-black dark:text-white">
             {description.substring(0, 200)}...
             <Link href={route}>
               <a className="mx-1 underline">
-                <span className="font-semibold italic">Read more</span>
+                <span className="font-regular italic">Read more</span>
               </a>
             </Link>
           </p>
           <p className="font-bold caption text-[#a5a5a5]">
-            Posted by {creator.firstName} {creator.lastName} |{" "}
+            Posted by {creator.firstName} {creator.lastName} I {" "}
             <DisplayDate date={new Date(posted)} show="date" />
           </p>
         </section>
-        <section className="flex justify-between">
+        <section className="lg:flex md:flex justify-between items-center">
           <div className="inline-flex gap-4 py-2 items-center">
             <svg
               width="33"
@@ -48,7 +53,7 @@ export default function EventCard(event) {
                 fill="#FF9700"
               />
             </svg>
-            <p className="subheadline">
+            <p className="md:subheadline">
               <EventTime start={start} end={end} />
             </p>
           </div>
@@ -56,7 +61,7 @@ export default function EventCard(event) {
             <AddToCalendar event={event} />
           ) : (
             <Link href={route}>
-              <button className="button-small button-deep-sky-blue">Register now</button>
+              <button className="button-small button-deep-sky-blue md:mx-0 mx-auto">Register now</button>
             </Link>
           )}
         </section>

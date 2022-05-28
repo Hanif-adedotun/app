@@ -11,8 +11,8 @@ import TwitterIcon from "../../components/icons/Twitter";
 import ProfileProjectCard from "../../components/project/ProfileProjectCard";
 import LinkedinIcon from "../../components/icons/Linkedin";
 import Empty from "../../components/Empty";
-
-import Scrapbook from "./Scrapbook";
+import ReCAPTCHA from "react-google-recaptcha";
+import ProfileScrapbook from "./Scrapbook";
 
 /**
  * takes initial array and returns trimmed array
@@ -33,40 +33,118 @@ export default function Profile({ loggedIn, user }) {
   // TODO: Set nav state for project and scrapbook
   const [openTab, setOpenTab] = useState(1);
 
+  const [showMore, setShowMore] = useState(true);
+  const availableFor = () => {
+    setShowMore(!showMore);
+  };
+  const [showSkills, setShowSkills] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+
   return (
     <div className="dark:bg-[#202020] dark:text-white">
       {/* ====== NavBar start */}
       <nav className="flex items-center justify-between pl-[10px] lg:pl-8 pr-[12px] lg:pr-12">
-        <Logo className="w-[80px] md:w-[120px] py-5" />
+        <Logo className="w-[50px] md:w-[120px] py-5" />
         <div className="flex gap-x-[0px] md:gap-x-3 lg:gap-x-5 items-center">
           <DarkModeToggle
-            className="mx-0 w-[25px] md:w-[44px] lg:scale-[1.24] lg:mr-[10px]"
-            darkClassName="mx-0 w-[25px] md:w-[33px] lg:w-[40px] h-[25px] md:h-[48px] lg:h-[60px]"
+            className="!mx-0 w-[27px] md:w-[44px] lg:scale-[1.24] lg:mr-[10px]"
+            darkClassName="!mx-0 w-[17px] md:w-[33px] lg:w-[40px] h-[25px] md:h-[48px] lg:h-[60px]"
           />
           <a
             href="https://github.com/TheDynamics"
-            className="scale-75 lg:scale-[1.4] md:scale-[1.15]">
+            className="scale-[.6] lg:scale-[1.4] md:scale-[1.15]">
             <GithubIcon />
           </a>
-          <Link href="https://thedynamics.tech">
-            <button className="px-[10px] py-[6px] md:py-[2px] bg-[#03a9f4] text-white rounded-[6px] text-[12px] md:text-[23px] lg:text-[28px] lg:button-big button-deep-sky-blue inline-flex gap-x-1 md:gap-x-3 items-center mx-2 my-0 md:my-0 focus:outline-none">
-              {loggedIn ? "Go back" : "All Events"}
-              <span className="md:mt-1">
-                <ArrowRightIcon />
-              </span>
-            </button>
-          </Link>
+
+          <button
+            className="md:px-[10px] px-2 py-[6px] lg:py-[2px] bg-[#03a9f4] text-white rounded-[6px] text-[11px] md:text-[23px] lg:text-[28px] lg:button-big button-deep-sky-blue inline-flex md:gap-x-3 items-center md:mx-2 md:mr-1 my-0 md:my-0 focus:outline-none"
+            onClick={() => setShowMessage(true)}>
+            {/* {loggedIn ? "Let's talk" : "All Events"} */}
+            Let's talk
+            <div className="scale-50 md:scale-100 lg:relative lg:top-[2px] justify-self-start">
+              <ArrowRightIcon />
+            </div>
+          </button>
+          {showMessage ? (
+            <div className="flex justify-center items-center  fixed inset-0 z-50 outline-none focus:outline-none rounded-lg w-auto mx-auto slide-bottom">
+              <div className="relative  my-6 mx-auto p-5 w-6/12">
+                <form className="form">
+                  <div>
+                    <label className="form-label">Enter Subject</label>
+                    <input type="text" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="form-label">Write Something</label>
+                    <textarea
+                      className="form-input h-40 resize-none"
+                      placeholder="Write something..."
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <ReCAPTCHA
+                      className="inline-block my-3"
+                      sitekey="6LexReUeAAAAAF5a0KmF1tz26MWEFUwnhQ7crZAL"
+                      onChange={i => console.log(i)}
+                    />
+                  </div>
+
+                  <div className="flex justify-center gap-x-5 mt-5">
+                    <button
+                      className="button-big button-deep-sky-blue px-20 w-[150px] text-22px mt-3 "
+                      onClick={() => setShowMessage(false)}>
+                      Close
+                    </button>
+                    <button
+                      className="button-big button-orange-peel px-20 w-[150px] text-22px mt-3"
+                      onClick={() => {}}>
+                      Send
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          ) : null}
         </div>
       </nav>
 
       {/* ====== #PROFILE head start */}
-      <div className=" flex items-center justify-center w-1/1 h-[350px] md:gap-10 gap-4 relative bg-[#f8fbff] dark:bg-[#2D2D2D]">
+      <div className=" flex items-center justify-center w-1/1 h-[350px] md:gap-10 gap-4 relative bg-[#f8fbff] dark:bg-[#2D2D2D] ">
         <Avatar image={ProfileImg} className="md:h-64 relative md:w-64 h-[170px] w-[170px] " />
         <div className=" h-60 flex p-2 flex-col justify-center  gap-0 items-start ">
           <h1 className="text-heading md:title subtitle dark:text-white">{user.name} </h1>
           {user.no_of_followers === 0 ? (
             <div className="flex items-center">
-              <h2 className="text-deep-sky-blue text-16px font-semibold mb-2">
+              <p className="text-26px -mt-1">
+                Founder, Hack Club -{" "}
+                <button className="font-bold" onClick={() => setShowSkills(true)}>
+                  View skills
+                </button>
+              </p>
+              {showSkills ? (
+                <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none rounded-lg w-2/4 mx-auto slide-bottom">
+                  <div className="relative  my-6 mx-auto  bg-white p-5">
+                    <div>
+                      <h2 className="font-semibold text-30px text-center p-5">
+                        Skills and Interest
+                      </h2>
+                      <hr />
+                      {user.skills.map((skill, index) => {
+                        return (
+                          <span className="text-24px " key={index}>
+                            {skill},{" "}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <button
+                      className="button-medium button-deep-sky-blue mx-auto mt-3"
+                      onClick={() => setShowSkills(false)}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+              <h2 className="text-deep-sky-blue md:text-36px text-30px font-semibold -mt-1">
                 Follow {user.name}{" "}
                 <span>
                   <FollowerIcon className="md:ml-4 hover:scale-110  md:inline-flex hidden" />
@@ -75,7 +153,38 @@ export default function Profile({ loggedIn, user }) {
             </div>
           ) : (
             <div>
-              <h2 className="text-deep-sky-blue md:subtitle text-30px font-semibold mb-2">
+              <p className="text-26px -mt-1">
+                Founder, Hack Club -{" "}
+                <button className="font-bold" onClick={() => setShowSkills(true)}>
+                  View skills
+                </button>
+              </p>
+              {showSkills ? (
+                <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none rounded-lg w-2/4 mx-auto slide-bottom">
+                  <div className="relative  my-6 mx-auto  bg-white p-5">
+                    <div>
+                      <h2 className="font-semibold text-30px text-center p-5">
+                        Skills and Interest
+                      </h2>
+                      <hr />
+                      {user.skills.map((skill, index) => {
+                        return (
+                          <span className="text-24px " key={index}>
+                            {skill},{" "}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <button
+                      className="button-medium button-deep-sky-blue mx-auto mt-3"
+                      onClick={() => setShowSkills(false)}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              <h2 className="text-deep-sky-blue md:text-36px text-30px font-semibold -mt-1 ">
                 {user.no_of_followers} Followers
               </h2>
               <span className="flex pt-4 gap-3 cursor-pointer h-16 pl-3  items-start">
@@ -85,6 +194,7 @@ export default function Profile({ loggedIn, user }) {
                       <Avatar
                         {...follower}
                         className="-m-3 relative h-9 w-9 p-0 hover:scale-110 "
+                        border="1px"
                         key={index}
                       />
                     );
@@ -94,13 +204,65 @@ export default function Profile({ loggedIn, user }) {
             </div>
           )}
 
-          <span className="flex gap-1 items-center h-16  mt-0 justify-center ">
+          <span className="flex gap-1 items-center h-16  -mt-1 justify-center ">
             <GithubIcon className=" h-9 w-9 hover:scale-110" />
             <TwitterIcon className="  h-9 w-16 hover:scale-110" />
             <LinkedinIcon className=" h-9 w-9 hover:scale-110" />
           </span>
         </div>
       </div>
+
+      <section className="p-10 flex items-center justify-center">
+        <div className="gap-x-5 flex">
+          <span className="p-1 px-2 text-deep-sky-blue rounded-md border-2 border-deep-sky-blue">
+            Developer Evangelist
+          </span>
+          <span className="p-1 px-2 text-deep-sky-blue rounded-md border-2 border-deep-sky-blue">
+            Founder
+          </span>
+          <span className="p-1 px-2 text-deep-sky-blue rounded-md border-2 border-deep-sky-blue">
+            Software Engineer
+          </span>
+          <span className="p-1 px-2 text-deep-sky-blue rounded-md border-2 border-deep-sky-blue">
+            Angel Investor
+          </span>
+          <span className="p-1 px-2 text-deep-sky-blue rounded-md border-2 border-deep-sky-blue">
+            Back-end Developer
+          </span>
+        </div>
+      </section>
+
+      <section className="p-10 pl-[153px] mx-auto flex justify-center items-center ">
+        <div className="w-[70%]">
+          <h1 className="mb-3 font-bold text-36px">I’M AVAILABLE FOR </h1>
+          <div className="flex flex-wrap gap-5">
+            {showMore
+              ? user.available.slice(0, 5).map((work, index) => {
+                  return (
+                    <span
+                      className="p-1 px-2  rounded-md border-2 border-deep-sky-blue"
+                      key={index}>
+                      {work}
+                    </span>
+                  );
+                })
+              : user.available.map((work, index) => {
+                  return (
+                    <span
+                      className="p-1 px-2  rounded-md border-2 border-deep-sky-blue"
+                      key={index}>
+                      {work}
+                    </span>
+                  );
+                })}
+            <span
+              onClick={availableFor}
+              className="p-1 px-2 cursor-pointer rounded-md border-2 border-deep-sky-blue">
+              {showMore ? `${user.available.length < 5 ? " " :` +${user.available.length - 5}`}`  : "Show less"}
+            </span>
+          </div>
+        </div>
+      </section>
 
       {/* ====== #TAB section start */}
       <section className="flex itens-center flex-col  items-center dark:bg-[#202020] transition-all p-5">
@@ -163,13 +325,13 @@ export default function Profile({ loggedIn, user }) {
             {user.projects.length === 0 ? (
               <Empty />
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 md:space-x-5 p-5 dark:text-white">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 md:space-x-5 md:p-5 p-1 dark:text-white">
                 <div className="dark:text-white">
                   {user &&
                     user.scrapbookItem.map((scrapbookItem, index) => {
                       if (user.scrapbookItem.indexOf(scrapbookItem) % 3 === 0)
                         return (
-                          <Scrapbook
+                          <ProfileScrapbook
                             time={scrapbookItem.time}
                             text={scrapbookItem.text}
                             image={scrapbookItem.image}
@@ -182,7 +344,7 @@ export default function Profile({ loggedIn, user }) {
                   {user.scrapbookItem.map((scrapbookItem, index) => {
                     if (user.scrapbookItem.indexOf(scrapbookItem) % 3 === 1)
                       return (
-                        <Scrapbook
+                        <ProfileScrapbook
                           time={scrapbookItem.time}
                           text={scrapbookItem.text}
                           image={scrapbookItem.image}
@@ -195,7 +357,7 @@ export default function Profile({ loggedIn, user }) {
                   {user.scrapbookItem.map((scrapbookItem, index) => {
                     if (user.scrapbookItem.indexOf(scrapbookItem) % 3 === 2)
                       return (
-                        <Scrapbook
+                        <ProfileScrapbook
                           time={scrapbookItem.time}
                           text={scrapbookItem.text}
                           image={scrapbookItem.image}
@@ -213,16 +375,35 @@ export default function Profile({ loggedIn, user }) {
 }
 
 export async function getServerSideProps(context) {
-  // Code in the scrapbook
-  const code = `.nav-link-home::before {
-    content : "Javier's"
-}`;
   // TODO: Call API for User profile data
   return {
     props: {
       loggedIn: true,
       user: {
         name: "Zach Latta",
+        available: [
+          "Building an MVP",
+          "Co-founding a startup",
+          "Freelance roles",
+          "Speaking at Events ",
+          "Investing",
+          "Open-source",
+          "Mentorship",
+          "Tutoring",
+          "Full time job",
+          "Internship"
+        ],
+        skills: [
+          "NextJS",
+          "React",
+          "Web-development",
+          "Django",
+          "Expresss",
+          "Startup",
+          "fundraising",
+          "Back-end",
+          "Investing"
+        ],
         no_of_followers: 10,
         followers: [
           { image: "/assets/TEST/img-1.jpg" },
